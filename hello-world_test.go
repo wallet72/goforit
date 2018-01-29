@@ -3,9 +3,12 @@ package main
 import (
 	"testing"
 	"net/http"
+	"fmt"
 )
 
 func Testconnect (t *testing.T){
+
+	fmt.Printf("Starting tests...\n\n\n")
 
 	http.HandleFunc("/",helloworld)
 	if fail := http.ListenAndServe(":3333",nil); fail != nil {
