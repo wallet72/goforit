@@ -4,39 +4,29 @@ import (
 	"testing"
 	"net/http"
 	"fmt"
-	//"./hello-world"
 	"log"
+	"net/http/httptest"
 )
 
-func Testconnect (test *testing.T) {
+func responsetest (rtest *testing.T){
 
-	test.Log("Starting tests...\n\n\n")
-	fmt.Printf("Starting testes...\n\n")
-
-	http.HandleFunc("/", webserver)
-	if fail := http.ListenAndServe(":3333", nil); fail != nil {
-
-		test.Errorf("could not open web server", )
-		fmt.Printf("Could not open web server", )
-
+	rtarget,rerror := http.NewRequest("GET","/",nil)
+	if rerror != nil {
+		fmt.Printf("Prep work failed: %s,%s", rtarget,rerror)
+		rtest.Fatal(rerror)
 	}
 
-	fmt.Printf("Web server started...\n\n")
+	incoming := httptest.NewRecorder()
+	processor := http.HandlerFunc(webserver)
+	processor.ServeHTTP(incoming,rtarget)
 
-	webresponse, badness := http.Get("127.0.0.1:3333")
+	status := incoming.Code;
 
-	if badness != nil {
-
-		fmt.Printf("Error response %s", badness)
-		log.Fatal(badness)
-
+	if status != http.StatusOK {
+		rtest.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
 	}
 
-	/*if webresponse != "hello world"{
-
-		log.Fatal("invalid response received: $S", webresponse)
-	}*/
-	fmt.Printf("Response received: %s\n\n", webresponse)
-	fmt.Printf("testing passed ok",)
-
+	if incoming.Body.String() != "Hello World" {
+		rtest.Errorf("Message body was not right: %v", incoming.Body.String())
+	}
 }

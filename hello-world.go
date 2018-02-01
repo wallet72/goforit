@@ -4,7 +4,7 @@ import "net/http"
 
 
 func webserver(web http.ResponseWriter, req *http.Request){
-	web.WriteHeader(200)
+	web.WriteHeader(http.StatusOK)
 	web.Write([]byte("Hello World"))
 
 }
