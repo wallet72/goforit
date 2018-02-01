@@ -4,11 +4,10 @@ import (
 	"testing"
 	"net/http"
 	"fmt"
-	"log"
 	"net/http/httptest"
 )
 
-func responsetest (rtest *testing.T){
+func TestHelloworld (rtest *testing.T){
 
 	rtarget,rerror := http.NewRequest("GET","/",nil)
 	if rerror != nil {
