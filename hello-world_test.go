@@ -4,32 +4,41 @@ import (
 	"testing"
 	"net/http"
 	"fmt"
+	"./hello-world"
+	"log"
 )
 
-func Testconnect (test *testing.T){
+func Testconnect (test *testing.T) {
 
 	test.Log("Starting tests...\n\n\n")
 	fmt.Printf("Starting testes...\n\n")
 
-	http.HandleFunc("/",helloworld)
-	if fail := http.ListenAndServe(":3333",nil); fail != nil {
+	http.HandleFunc("/", helloworld)
+	if fail := http.ListenAndServe(":3333", nil); fail != nil {
 
-		test.Errorf("could not open web server",)
-		fmt.Printf("Could not open web server")
+		test.Errorf("could not open web server", )
+		fmt.Printf("Could not open web server", )
 
 	}
+}
+
+func webtest(handle *testing.T){
 
 	fmt.Printf("Web server started...\n\n")
 
-	//defer body.Body.Close()
+	webresponse, error := http.Get("127.0.0.1:3333")
 
-	body, err := http.Get("127.0.0.1:3333")
-	if err != nil {
-		test.Errorf("Something wrong with the response from the server")
+	if error != nil {
+
+		log.Fatal("error: %s", error)
+
 	}
-	fmt.Printf("Response received ok")
 
-	defer body.Body.Close()
+	if webresponse != "hello world"{
 
+		log.Fatal("invalid response received: %S", webresponse)
+	}
+
+	fmt.Printf("testing passed ok",)
 
 }
